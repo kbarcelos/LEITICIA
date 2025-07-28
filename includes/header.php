@@ -7,21 +7,40 @@ require_once __DIR__ . '/../config/config.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= defined('SITE_NAME') ? SITE_NAME : 'Plataforma Leitícia' ?></title>
-
   <meta name="description" content="Plataforma Leitícia - Doe leite, alimente esperanças.">
-  <link rel="manifest" href="<?= BASE_URL ?>/manifest.json">
   <meta name="theme-color" content="#336964">
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="<?= BASE_URL ?>/manifest.json">
+
+  <!-- Favicon -->
   <link rel="icon" href="<?= BASE_URL ?>/assets/images/favicon.png" type="image/png">
 
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-sA+e2H6gRn3H9RZGDYWndgdHWJrL1tQpYr5ZZ09NMYc="
+    crossorigin=""
+  />
+
+  <!-- Seus estilos -->
   <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/styles.css">
   <link rel="stylesheet" href="<?= BASE_URL ?>/fonts/material-icons.css">
 
+  <!-- Variável JS de ambiente -->
   <script>
-    window.BASE_URL = '<?= defined('BASE_URL') ? BASE_URL : "/"; ?>';
+    window.BASE_URL = '<?= BASE_URL ?>';
   </script>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""
+  ></script>
 </head>
 <body>
-
 <div class="site-wrapper">
 
   <aside class="sidebar">

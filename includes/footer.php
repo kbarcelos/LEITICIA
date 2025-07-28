@@ -27,3 +27,26 @@
 
 </body>
 </html>
+</div> <!-- /.site-wrapper -->
+
+  <!-- Scripts da aplicação -->
+  <script src="<?= BASE_URL ?>/assets/js/main.js"></script>
+  <script src="<?= BASE_URL ?>/assets/js/mapas.js"></script>
+
+  <!-- Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker
+          .register('<?= BASE_URL ?>/service-worker.js')
+          .then(function(reg) {
+            console.log('SW registrado:', reg.scope);
+          })
+          .catch(function(err) {
+            console.error('Falha no registro do SW:', err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
