@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Você está offline</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="flex items-center justify-center h-screen bg-light">
+  <div class="text-center card">
+    <h1 class="text-3xl font-heading text-primary mb-2">Ops… você está offline!</h1>
+    <p>Não conseguimos carregar esta página sem conexão.  
+       Enquanto isso, confira os recursos já disponíveis:</p>
+    <ul class="mt-4 text-left">
+      <li>• Home e conteúdos em cache</li>
+      <li>• Mapa estático de bancos de leite</li>
+      <li>• Acesso às últimas doações sincronizadas</li>
+    </ul>
+    <a href="/" class="btn btn-primary mt-6">Voltar para Home</a>
+  </div>
+</body>
+</html>
+<script>
+  // Exibe um alerta se o usuário tentar acessar recursos que requerem conexão
+  window.addEventListener('offline', () => {
+    alert('Você está offline. Algumas funcionalidades podem não estar disponíveis.');
+  });

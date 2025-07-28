@@ -1,0 +1,73 @@
+:root {
+  --cor-lilas: #bdaabd;
+  --cor-verde-claro: #9cad98;
+  --cor-verde-escuro: #336964;
+  --cor-branco: #ffffff;
+  --cor-preto: #000000;
+  --cor-azul: #024a7f;
+  --cor-vermelho: #880808;
+  --cor-laranja: #ae8774;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--cor-branco);
+  color: var(--cor-preto);
+}
+
+header {
+  background-color: var(--cor-azul);
+  color: var(--cor-branco);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+main {
+  padding: 2rem;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  color: var(--cor-azul);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--cor-lilas);
+  border: 2px solid var(--cor-laranja);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  color: var(--cor-preto);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card i.material-icons {
+  font-size: 2.4rem;
+  color: var(--cor-verde-escuro);
+  margin-bottom: 0.5rem;
+}
+
+.card span {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+}

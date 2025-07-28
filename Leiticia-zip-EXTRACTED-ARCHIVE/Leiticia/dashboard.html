@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Plataforma Leitícia</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/icons.css" />
+  <style>
+    :root {
+      --lilas: #bdaabd;
+      --verde-claro: #9cad98;
+      --verde-escuro: #336964;
+      --branco: #ffffff;
+      --preto: #000000;
+      --azul-alba: #024a7f;
+      --vermelho: #880808;
+      --laranja-borda: #ae8774;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: var(--branco);
+      color: var(--preto);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--lilas);
+      color: var(--branco);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    .welcome {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 2rem;
+      flex: 1;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: var(--azul-alba);
+    }
+
+    #card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: var(--verde-claro);
+      color: var(--preto);
+      border: 2px solid var(--laranja-borda);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      transition: 0.2s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card:hover {
+      background-color: var(--verde-escuro);
+      color: var(--branco);
+      transform: scale(1.02);
+    }
+
+    .card i {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      background-color: var(--lilas);
+      color: var(--branco);
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="images/logo.png" alt="Logo Leitícia">
+    <div class="welcome">Olá, <span id="nome-usuario">Usuário</span></div>
+  </header>
+
+  <main>
+    <h2>Suas Funcionalidades</h2>
+    <div id="card-container"></div>
+  </main>
+
+  <footer>
+    Plataforma Leitícia – Projeto piloto 2025 ©
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

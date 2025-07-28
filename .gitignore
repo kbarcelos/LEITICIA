@@ -1,0 +1,9 @@
+# Configurações sensíveis
+config/config.php
+
+# Dependências (se houver)
+vendor/
+
+# Logs e caches
+*.log
+cache/

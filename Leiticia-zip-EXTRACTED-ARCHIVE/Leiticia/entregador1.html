@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Entregador</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/icons.css">
+    
+    <!-- Leaflet.js CSS (para o mapa gratuito) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        /* Estilos específicos para a tela do Entregador */
+        .app-container {
+            padding: 0; /* Remove o preenchimento para o mapa ocupar todo o espaço */
+        }
+        .driver-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--cor-branco);
+            border-bottom: 1px solid #eee;
+        }
+        .driver-info h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .online-toggle {
+            display: flex;
+            align-items: center;
+            background-color: var(--cor-verde-escuro);
+            color: var(--cor-branco);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+        }
+        .online-toggle i {
+            margin-right: 0.5rem;
+        }
+        .map-container {
+            height: 60vh; /* O mapa ocupa a maior parte da tela */
+            background-color: #e9ecef;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        .task-container {
+            padding: 1.5rem;
+            background-color: var(--cor-branco);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .task-container h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="driver-header">
+            <div class="driver-info">
+                <h2>Olá, Carlos!</h2>
+            </div>
+            <button class="online-toggle" onclick="toggleOnlineStatus(this)">
+                <i class="material-icons">power_settings_new</i>
+                <span>Ficar Online</span>
+            </button>
+        </div>
+
+        <div class="map-container" id="map">
+            <!-- O mapa gratuito do OpenStreetMap será renderizado aqui -->
+        </div>
+
+        <div class="task-container">
+            <h3>Próxima Recolha</h3>
+            <div class="card">
+                <p id="task-status" style="text-align: center; color: #6c757d;">Aguardando novas solicitações...</p>
+                <button id="route-button" class="btn btn-primary" style="display: none; margin-top: 1rem;">Indicar Rota</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet.js (para o mapa gratuito) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        let map;
+        let userMarker;
+
+        // Função para inicializar o mapa
+        function initMap(position) {
+            const userCoords = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Cria o mapa centrado na localização do utilizador
+            map = L.map('map').setView([userCoords.lat, userCoords.lng], 15);
+
+            // Adiciona a camada de mapa do OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Adiciona um marcador para a posição do entregador
+            userMarker = L.marker([userCoords.lat, userCoords.lng]).addTo(map)
+                .bindPopup('A sua localização atual.')
+                .openPopup();
+        }
+
+        // Função para lidar com erros de geolocalização
+        function handleLocationError() {
+            // Localização padrão (Serra, ES, Brasil) caso o utilizador negue a permissão
+            const defaultLocation = { coords: { latitude: -20.1283, longitude: -40.3082 } };
+            initMap(defaultLocation);
+            alert("Não foi possível obter a sua localização. A mostrar localização padrão.");
+        }
+
+        // Pede a localização do utilizador quando a página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(initMap, handleLocationError);
+            } else {
+                handleLocationError(); // Navegador não suporta geolocalização
+            }
+        });
+
+        // Função para alternar o status online/offline
+        function toggleOnlineStatus(button) {
+            const span = button.querySelector('span');
+            const taskStatus = document.getElementById('task-status');
+            const routeButton = document.getElementById('route-button');
+
+            if (span.textContent === 'Ficar Online') {
+                span.textContent = 'Ficar Offline';
+                button.style.backgroundColor = 'var(--cor-vermelho-sangue)';
+                taskStatus.textContent = 'Procurando recolhas perto de si...';
+                routeButton.style.display = 'none';
+                // Simula o aparecimento de uma nova tarefa após 5 segundos
+                setTimeout(assignNewTask, 5000);
+            } else {
+                span.textContent = 'Ficar Online';
+                button.style.backgroundColor = 'var(--cor-verde-escuro)';
+                taskStatus.textContent = 'Você está offline.';
+                routeButton.style.display = 'none';
+            }
+        }
+
+        // Simula a atribuição de uma nova tarefa
+        function assignNewTask() {
+            const taskStatus = document.getElementById('task-status');
+            const routeButton = document.getElementById('route-button');
+            const onlineToggle = document.querySelector('.online-toggle span');
+
+            // Só atribui a tarefa se o utilizador ainda estiver online
+            if (onlineToggle.textContent === 'Ficar Offline') {
+                taskStatus.innerHTML = '<strong>Nova Recolha!</strong><br>Recolher em: Rua das Flores, 123';
+                routeButton.style.display = 'block';
+
+                // Adiciona um marcador para o local da recolha
+                const pickupLocation = [-20.1350, -40.3150]; // Coordenadas de exemplo
+                L.marker(pickupLocation).addTo(map)
+                    .bindPopup('Local da Recolha');
+                
+                // Define a ação do botão para indicar a rota
+                routeButton.onclick = () => {
+                    const userPosition = userMarker.getLatLng();
+                    const destination = pickupLocation.join(',');
+                    // Abre o Google Maps com a rota a partir da localização do utilizador
+                    window.open(`https://www.google.com/maps/dir/?api=1&origin=${userPosition.lat},${userPosition.lng}&destination=${destination}`, '_blank');
+                };
+            }
+        }
+    </script>
+</body>
+</html>

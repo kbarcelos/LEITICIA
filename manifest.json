@@ -1,0 +1,27 @@
+{
+  "name": "Plataforma Leitícia",
+  "short_name": "Leitícia",
+  "description": "Conectando mães lactantes, bancos de leite e famílias.",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#e9f7ef",
+  "theme_color": "#28a745",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/images/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

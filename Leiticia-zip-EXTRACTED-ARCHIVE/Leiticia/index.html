@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Plataforma Leitícia</title>
+  <link rel="stylesheet" href="css/icons.css" />
+  <style>
+    :root {
+      --lilas: #bdaabd;
+      --verde-claro: #9cad98;
+      --verde-escuro: #336964;
+      --branco: #ffffff;
+      --preto: #000000;
+      --azul-alba: #024a7f;
+      --vermelho: #880808;
+      --laranja-borda: #ae8774;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(135deg, var(--lilas), var(--verde-claro));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background-color: var(--branco);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-box img {
+      height: 70px;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      color: var(--azul-alba);
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--laranja-borda);
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--verde-escuro);
+      color: var(--branco);
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--azul-alba);
+    }
+
+    .error {
+      color: var(--vermelho);
+      font-size: 0.9rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <img src="images/logo.png" alt="Logo Leitícia">
+    <h2>Acesso à Plataforma</h2>
+    <form id="loginForm">
+      <input type="text" id="login" placeholder="Usuário" required />
+      <input type="password" id="senha" placeholder="Senha" required />
+      <div id="msgErro" class="error"></div>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    let usuarios = [];
+
+    function carregarUsuariosCSV() {
+      fetch('data/usuarios.csv')
+        .then(response => {
+          if (!response.ok) throw new Error('Erro ao carregar CSV');
+          return response.text();
+        })
+        .then(text => {
+          const linhas = text.trim().split('\n');
+          linhas.shift(); // remove cabeçalho
+          usuarios = linhas.map(linha => {
+            const [login, senha, nome, tipo] = linha.split(';');
+            return { login: login.trim(), senha: senha.trim(), nome: nome.trim(), tipo: tipo.trim() };
+          });
+        })
+        .catch(err => {
+          console.error("Erro ao carregar CSV:", err);
+          alert("Não foi possível carregar os dados de usuários.");
+        });
+    }
+
+    function validarLogin(e) {
+      e.preventDefault();
+      const login = document.getElementById('login').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+      const msgErro = document.getElementById('msgErro');
+
+      const usuario = usuarios.find(u => u.login === login && u.senha === senha);
+
+      if (usuario) {
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+        window.location.href = "dashboard.html";
+      } else {
+        msgErro.textContent = "Usuário ou senha inválidos!";
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', validarLogin);
+    carregarUsuariosCSV();
+  </script>
+</body>
+</html>
