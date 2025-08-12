@@ -1,0 +1,7 @@
+# robots.txt — DEV (subdomínio dev.leiticia.com.br)
+# Bloqueia todos os bots de indexar o ambiente de desenvolvimento.
+
+User-agent: *
+Disallow: /
+
+# Não inclua Sitemap aqui para dev.

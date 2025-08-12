@@ -1,0 +1,14 @@
+/* src/app/layout.css
+   Estilos base do layout (mantém leve para não conflitar com seu styles.css).
+*/
+
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.header, .footer { background: #0d6460; color: #fff; }
+.app-content { display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 16px; }
+.app-sidebar { background: #f6fbf9; border: 1px solid #e2f1ec; border-radius: 12px; padding: 16px; }
+.app-main { min-width: 0; }
+@media (max-width: 900px) {
+  .app-content { grid-template-columns: 1fr; }
+  .app-sidebar { order: 2; }
+  .app-main { order: 1; }
+}

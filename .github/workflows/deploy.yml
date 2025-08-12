@@ -1,0 +1,117 @@
+name: Build & Deploy (React SPA)
+
+on:
+  push:
+    branches: [ "main" ]          # push na main -> deploy para DEV
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Ambiente (dev ou prod)"
+        type: choice
+        required: true
+        default: dev
+        options: [dev, prod]
+      dry_run:
+        description: "Dry-run (não envia arquivos)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ github.ref }}-${{ inputs.environment || 'dev' }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'dev' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      # .env do Vite com URL da API do ambiente
+      - name: Create .env
+        run: |
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
+          echo "VITE_BASE=/" >> .env
+
+      - name: Build
+        run: npm run build
+
+      # Copia .htaccess do repo para a raiz do build
+      - name: Copy .htaccess to dist
+        run: |
+          if [ -f ".htaccess" ]; then
+            cp .htaccess dist/.htaccess
+          else
+            echo ".htaccess não encontrado"; exit 1;
+          fi
+
+      # robots.txt específico por ambiente
+      - name: Generate robots.txt
+        run: |
+          if [ "${{ inputs.environment || 'dev' }}" = "dev" ]; then
+            cat > dist/robots.txt <<'TXT'
+User-agent: *
+Disallow: /
+TXT
+          else
+            cat > dist/robots.txt <<'TXT'
+User-agent: *
+Disallow:
+Sitemap: ${{ secrets.SITEMAP_URL }}
+TXT
+          fi
+          echo "robots.txt gerado:"
+          cat dist/robots.txt
+
+      - name: Upload artifact (dist)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'dev' }}
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: List dist
+        run: ls -la dist
+
+      # Deploy via FTP/FTPS (SamKirkland)
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:      ${{ secrets.FTP_SERVER }}        # 212.85.6.1
+          port:        ${{ secrets.FTP_PORT }}          # 21
+          protocol:    ${{ secrets.FTP_PROTOCOL }}      # ftps (ou ftp)
+          username:    ${{ secrets.FTP_USERNAME }}      # u840768594
+          password:    ${{ secrets.FTP_PASSWORD }}      # sua nova senha
+          server-dir:  ${{ secrets.FTP_SERVER_DIR }}    # /domains/leiticia.com.br/public_html/dev/
+          local-dir:   dist
+          timeout:     120000
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/*.map
+          dry-run: ${{ inputs.dry_run }}
+          # dangerous-clean-slate: true    # ⚠️ limpe tudo antes de enviar (use com MUITO cuidado)
