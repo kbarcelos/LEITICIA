@@ -1,4 +1,4 @@
-﻿{
+{
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
@@ -8,8 +8,6 @@
     "GitHub.vscode-github-actions",
     "redhat.vscode-yaml",
     "msjsdiag.vscode-react-native",
-    "expo.vscode-expo-tools",
-    "pkief.material-icon-theme",
-    "humao.rest-client"
+    "expo.vscode-expo-tools"
   ]
 }
